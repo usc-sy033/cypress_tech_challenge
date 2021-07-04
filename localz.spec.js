@@ -5,6 +5,7 @@ describe('Localz home page', function(){
 
     //check search bar input
     // no data id or element id found, therefore using css class
+    
     it('serach-bar-input', () => {
         cy.get('*[class^="atmc-header_right"]').click();
         cy.get('input[name="term"]').type('e{enter}');
@@ -21,33 +22,38 @@ describe('Localz home page', function(){
         cy.get('input[name="term"]').type('!{enter}');
         cy.get('#hs_cos_wrapper_search_results').contains('Try rewording your query, or browse through our site.');
     });
-    
-    
-    //check email
 
+    //check email
     it('Visit the URL', function(){
         cy.visit('https://www.localz.com/');
     });	
-    //Test
+    //Test results of alert after specific email input
+    //123@localz.com, 222@localz.com pass rest should not pass
+    function validateEmail(x) {
+        //var re = new RegExp("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/");
+        var re = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        return re.test(x);
+        };
     it('email-address input1', () => {
         //list of random email
         var email = "";
-        var email_id = ["!darcie", "Twdegcde", "ttt", "0!@3z", "?!@#$" ];
+        var email_id = ["Twdegcde", "?!@#$",  "123", "!darcie", "222"];
         var domain_valid = '@localz.com';
+        
         for(var i = 0; i < email_id.length; i++){
             email = email_id[i] + domain_valid;
             cy.get('[data-reactid =".hbspt-forms-0.1:$0.$email.$email.0"]').clear().type(email);
-            function validateEmail(x) {
-                var re = new RegExp("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/");
-                return re.test(x);
-                };
+            cy.get('[data-reactid=".hbspt-forms-0.1:$0.0"]').click();
             if(validateEmail(email) == false){
-                cy.get('[data-reactid=".hbspt-forms-0.1:$0.$email.3.$0.0"]')
-                .contains('Email must be formatted correctly.');
+                cy.get('[data-reactid=".hbspt-forms-0.1:$0.$email.3.$0.0"]').contains('Email must be formatted correctly.');
+                cy.log('worng format');
+            }else if(validateEmail(email) == true){
+                cy.log(email + ' is passed');
             }
         };
     });	
-
+    ///id can be tested by regular expression in V2.js
+    // what can be a comparison value for domain names?
 
 
 });
