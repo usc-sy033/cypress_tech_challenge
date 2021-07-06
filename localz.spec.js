@@ -29,8 +29,8 @@ describe('Localz home page', function(){
     });	
     //Test results of alert after specific email input
     //123@localz.com, 222@localz.com pass rest should not pass
+    //RegExp came from v2.js file in the localz.com
     function validateEmail(x) {
-        //var re = new RegExp("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/");
         var re = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         return re.test(x);
         };
@@ -47,13 +47,18 @@ describe('Localz home page', function(){
             if(validateEmail(email) == false){
                 cy.get('[data-reactid=".hbspt-forms-0.1:$0.$email.3.$0.0"]').contains('Email must be formatted correctly.');
                 cy.log('worng format');
+                cy.get('[data-reactid=".hbspt-forms-0.5.1.0"]').click();
+                cy.get('[data-reactid=".hbspt-forms-0.4.0.0.0"]').contains('Please change your email address to continue.');
             }else if(validateEmail(email) == true){
                 cy.log(email + ' is passed');
-            }
+                cy.get('[data-reactid=".hbspt-forms-0.5.1.0"]').click();
+                cy.get('#hs_form_target_footer-module_').contains('Thanks for subscribing! See you in your inbox.');
+                cy.visit('https://www.localz.com/');
+            };
         };
     });	
     ///id can be tested by regular expression in V2.js
-    // what can be a comparison value for domain names?
+    //how to check domain ..
 
 
 });
